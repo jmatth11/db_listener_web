@@ -4,7 +4,7 @@ let socket;
 
   const notifs = [];
   const items = [];
-  socket = new WebSocket("ws://localhost:3000/ws");
+  socket = new WebSocket(`ws://${window.location.host}/ws`);
   socket.onopen = () => {
     console.log("connected");
   };
