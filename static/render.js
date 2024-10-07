@@ -42,12 +42,18 @@ const render = (function(){
     };
   }
 
+  // maybe have all items stacked by namespace and when clicked on
+  // expand that section to then click on individual items.
   function add_items(items, links) {
     current_items = [];
     let point = {x: 5, y: 5};
     for (const item of items) {
       const rect = gen_rect(point.x, point.y);
       point.x += (rect.width + padding);
+      if ((point.x + point.width) > canvas.width) {
+        point.y += (rect.height + padding);
+        point.x = 5;
+      }
       current_items.push({
         rect,
         item,
