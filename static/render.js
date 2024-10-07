@@ -3,7 +3,9 @@ const render = (function(){
   const ctx = canvas.getContext("2d");
   const canvasLeft = canvas.offsetLeft + canvas.clientLeft;
   const canvasTop = canvas.offsetTop + canvas.clientTop;
+  const detail_info = new details("main");
   const size = 40;
+  const boxes = new box_item(ctx, size, size);
   const padding = 40;
   const state = render_state;
   let current_items = new Map();
@@ -32,7 +34,7 @@ const render = (function(){
             item.callback(item.ctx);
             const kvs = item.ctx.get_primary_keys_name_and_values();
             const [_, key] = kvs[0];
-            state.set_individual(key);
+            state.set_individual(item.ctx);
             clicked_item = true;
             render();
           }
@@ -84,6 +86,10 @@ const render = (function(){
     }
   }
 
+  function render_details(obj) {
+    detail_info.display(obj.payload);
+  }
+
   function render_items(items) {
     let point = {x: 5, y: 5};
     for (const item of items) {
@@ -96,23 +102,19 @@ const render = (function(){
         point.x = 5;
       }
       // grab the primary key's value
+      let selected = false;
+      if (state.get_type() == state.type.INDIVIDUAL) {
+        selected = obj.compare_primary_keys(state.get_cur_key());
+      }
       const kvs = obj.get_primary_keys_name_and_values();
       const [_, title] = kvs[0];
-      ctx.fillStyle = title == state.get_cur_key() ? "#999" : "#111";
-      ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
-      ctx.fillStyle = "#fff";
-      ctx.fillText(title, rect.x + 1, (rect.y + (rect.height/2)));
+      boxes.gen_box(title, rect, selected);
     }
   }
 
   function render_parents() {
     for (const [title, item] of current_items.entries()) {
-      ctx.fillStyle = "#111";
-      ctx.fillRect(item.rect.x, item.rect.y, item.rect.width, item.rect.height);
-      ctx.fillStyle = "#0f0";
-      ctx.fillText(`${item.items.length}`, item.rect.x + (item.rect.width/2), (item.rect.y + (item.rect.height/2)));
-      ctx.fillStyle = "#f00";
-      ctx.fillText(title, item.rect.x, (item.rect.y + item.rect.height + 5));
+      boxes.gen_box(`${item.items.length}`, item.rect, false, title);
     }
   }
 
@@ -127,6 +129,9 @@ const render = (function(){
       case state.type.INDIVIDUAL: {
         const items = current_items.get(state.get_category_key()).items;
         render_items(items);
+        if (state.get_type() == state.type.INDIVIDUAL) {
+          render_details(state.get_cur_key());
+        }
         break;
       }
     }

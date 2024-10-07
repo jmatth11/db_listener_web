@@ -1,3 +1,6 @@
+/**
+ * Context class to manage a notification from the database.
+ */
 class context {
   #PRIMARY_KEY = "PRIMARY_KEY";
   #FOREIGN_KEY = "FOREIGN_KEY";
@@ -73,9 +76,20 @@ class context {
       }
     ));
   }
-
+  compare_primary_keys(obj) {
+    const kvs = this.get_primary_keys_name_and_values();
+    for (const [c_name, c_val] of kvs) {
+      if (obj.payload[c_name] !== c_val) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
 
+/**
+ * Render item class to hold a Context object and a callback for events.
+ */
 class render_item {
   /**
    * Construct a render item.
