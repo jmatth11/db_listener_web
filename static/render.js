@@ -50,7 +50,7 @@ const render = (function(){
     for (const item of items) {
       const rect = gen_rect(point.x, point.y);
       point.x += (rect.width + padding);
-      if ((point.x + point.width) > canvas.width) {
+      if ((point.x + rect.width) > canvas.width) {
         point.y += (rect.height + padding);
         point.x = 5;
       }
