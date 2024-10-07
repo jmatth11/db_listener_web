@@ -1,7 +1,5 @@
 let socket;
 (function() {
-  const div = document.getElementById("main");
-
   const notifs = [];
   const items = [];
   const details = document.getElementById("details");
@@ -40,7 +38,6 @@ let socket;
       render.add_items(items);
       render.render();
     }
-    console.log("server data", event.data);
   };
   socket.onerror = (err) => { console.error(err); };
   socket.onclose = () => { alert("connection closed"); };
