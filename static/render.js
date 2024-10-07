@@ -85,18 +85,17 @@ const render = (function(){
       const channel = item.ctx.channel;
       if (!current_items.get(channel)) {
         console.log(`creating new entry for ${channel}`);
+        const rect = gen_rect(point.x, point.y);
+        point.x += (rect.width + padding);
+        if ((point.x + rect.width) > canvas.width) {
+          point.y += (rect.height + padding);
+          point.x = 5;
+        }
         current_items.set(channel, {
-          rect: undefined,
+          rect: rect,
           items: [],
         });
       }
-      const rect = gen_rect(point.x, point.y);
-      point.x += (rect.width + padding);
-      if ((point.x + rect.width) > canvas.width) {
-        point.y += (rect.height + padding);
-        point.x = 5;
-      }
-      current_items.get(channel).rect = rect;
       current_items.get(channel).items.push(item);
     }
   }
