@@ -35,16 +35,15 @@ let socket;
       console.log(tmp);
       notifs.push(tmp);
       console.warn(tmp);
-      const obj_keys = Object.keys(tmp.payload);
-      //items.push(render.gen_item(tmp.payload[obj_keys[0]],
-      //    tmp,
-      //    (ctx) => display_details(ctx),
-      //));
-      //render.add_items(items, []);
+      items.push(render.gen_item(
+          tmp,
+          (ctx) => display_details(ctx),
+      ));
+      render.add_items(items);
+      render.render();
     }
     console.log("server data", event.data);
   };
   socket.onerror = (err) => { console.error(err); };
   socket.onclose = () => { alert("connection closed"); };
-  //setInterval(render.render, 1000 * 60);
 })()
