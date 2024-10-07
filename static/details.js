@@ -34,7 +34,9 @@ class details {
       this.button_rect.width, this.button_rect.height, 7);
     this.ctx.fill();
     this.ctx.fillStyle = "#000";
-    this.txt.draw_text(this.#button_text);
+    const text_x = this.button_rect.x + button_padding / 2;
+    const text_y = this.button_rect.y + (this.button_rect.height - (button_padding));
+    this.txt.draw_text(this.#button_text, text_x, text_y);
   }
 
   display(obj) {

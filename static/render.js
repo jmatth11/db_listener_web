@@ -4,6 +4,7 @@ const render = (function(){
   const canvasLeft = canvas.offsetLeft + canvas.clientLeft;
   const canvasTop = canvas.offsetTop + canvas.clientTop;
   const detail_info = new details("main");
+  const cons = new connections("main");
   const size = 40;
   const boxes = new box_item(ctx, size, size);
   const padding = 40;
@@ -32,8 +33,6 @@ const render = (function(){
           if (y > item.rect.y && y < (item.rect.y + item.rect.height) &&
               x > item.rect.x && x < (item.rect.x + item.rect.width)) {
             item.callback(item.ctx);
-            const kvs = item.ctx.get_primary_keys_name_and_values();
-            const [_, key] = kvs[0];
             state.set_individual(item.ctx);
             clicked_item = true;
             render();
@@ -47,6 +46,8 @@ const render = (function(){
             x > detail_info.button_rect.x &&
           x < (detail_info.button_rect.x + detail_info.button_rect.width)) {
           state.set_connections();
+          clicked_item = true;
+          render();
         }
         break;
       }
@@ -139,15 +140,16 @@ const render = (function(){
         break;
       }
       case state.type.CATEGORY:
-      case state.type.INDIVIDUAL: {
+      case state.type.INDIVIDUAL:
         const items = current_items.get(state.get_category_key()).items;
         render_items(items);
         if (state.get_type() == state.type.INDIVIDUAL) {
           render_details(state.get_cur_key());
         }
         break;
-      }
       case state.type.CONNECTIONS: {
+        const ind_cons = cons.aggregate_connections(state.get_cur_key(), current_items);
+        cons.display_connections(state.get_cur_key(), ind_cons);
         break;
       }
     }
