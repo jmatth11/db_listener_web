@@ -42,7 +42,12 @@ const render = (function(){
         break;
       }
       case state.type.INDIVIDUAL: {
-
+        if (y > detail_info.button_rect.y &&
+          y < (detail_info.button_rect.y + detail_info.button_rect.height) &&
+            x > detail_info.button_rect.x &&
+          x < (detail_info.button_rect.x + detail_info.button_rect.width)) {
+          state.set_connections();
+        }
         break;
       }
     }
@@ -140,6 +145,9 @@ const render = (function(){
         if (state.get_type() == state.type.INDIVIDUAL) {
           render_details(state.get_cur_key());
         }
+        break;
+      }
+      case state.type.CONNECTIONS: {
         break;
       }
     }
