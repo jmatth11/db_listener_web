@@ -7,7 +7,7 @@ let socket;
   const details = document.getElementById("details");
   function display_details(ctx) {
     const parent_div = document.createElement("div");
-    for (const [key, value] of Object.entries(ctx)) {
+    for (const [key, value] of Object.entries(ctx.payload)) {
       const child_div = document.createElement("div");
       const label = document.createElement("label");
       const label_value = document.createElement("label");
@@ -30,19 +30,21 @@ let socket;
       const tmp = {
         channel: data.channel,
         payload: JSON.parse(data.payload),
+        metadata: data.metadata,
       };
       console.log(tmp);
       notifs.push(tmp);
+      console.warn(tmp);
       const obj_keys = Object.keys(tmp.payload);
       items.push(render.gen_item(tmp.payload[obj_keys[0]],
-          tmp.payload,
+          tmp,
           (ctx) => display_details(ctx),
       ));
       render.add_items(items, []);
-      render.render();
     }
     console.log("server data", event.data);
   };
   socket.onerror = (err) => { console.error(err); };
-  socket.onclose = () => { console.log("connection closed"); };
+  socket.onclose = () => { alert("connection closed"); };
+  setInterval(render.render, 1000 * 60);
 })()
