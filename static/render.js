@@ -67,18 +67,11 @@ const render = (function(){
     // not sure if I want to categorize the duplicates in a "version" property
     // or leave as-is and highlight them when selected.
     current_items = new Map();
-    let point = {x: 5, y: 5};
     for (const item of items) {
       const channel = item.ctx.channel;
       if (!current_items.get(channel)) {
-        const rect = gen_rect(point.x, point.y);
-        point.x += (rect.width + padding);
-        if ((point.x + rect.width) > canvas.width) {
-          point.y += (rect.height + padding);
-          point.x = 5;
-        }
         current_items.set(channel, {
-          rect: rect,
+          rect: null,
           items: [],
         });
       }
@@ -91,7 +84,12 @@ const render = (function(){
   }
 
   function render_items(items) {
-    let point = {x: 5, y: 5};
+    ctx.save();
+    boxes.txt.set_font("12px serif");
+    ctx.fillStyle = "#f00";
+    boxes.txt.draw_text(state.get_category_key(), 5, 10);
+    ctx.restore();
+    const point = {x:5,y:15}
     for (const item of items) {
       const obj = item.ctx;
       const rect = gen_rect(point.x, point.y);
@@ -113,8 +111,18 @@ const render = (function(){
   }
 
   function render_parents() {
+    let point = {x: 5, y: 10};
+    let max_height = size;
     for (const [title, item] of current_items.entries()) {
-      boxes.gen_box(`${item.items.length}`, item.rect, false, title);
+      const rect = gen_rect(point.x, point.y);
+      item.rect = rect;
+      const gen_dim = boxes.gen_box(`${item.items.length}`, item.rect, false, title);
+      if (gen_dim.height > size) max_height = gen_dim.height;
+      point.x += (gen_dim.width + padding);
+      if ((point.x + gen_dim.width) > canvas.width) {
+        point.y += (max_height + padding);
+        point.x = 5;
+      }
     }
   }
 
