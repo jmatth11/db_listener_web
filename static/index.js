@@ -26,16 +26,14 @@ let socket;
   socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
     if (data.payload !== "") {
-      console.warn(data);
-      const tmp = {
-        channel: data.channel,
-        payload: JSON.parse(data.payload),
-        metadata: data.metadata,
-      };
-      console.log(tmp);
+      const tmp = new context(
+        data.channel,
+        JSON.parse(data.payload),
+        data.metadata,
+      );
       notifs.push(tmp);
       console.warn(tmp);
-      items.push(render.gen_item(
+      items.push(new render_item(
           tmp,
           (ctx) => display_details(ctx),
       ));
