@@ -32,7 +32,9 @@ const render = (function(){
         for (const item of items) {
           if (y > item.rect.y && y < (item.rect.y + item.rect.height) &&
               x > item.rect.x && x < (item.rect.x + item.rect.width)) {
-            item.callback(item.ctx);
+            if (item.callback) {
+              item.callback(item.ctx);
+            }
             state.set_individual(item.ctx);
             clicked_item = true;
             render();

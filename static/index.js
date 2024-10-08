@@ -1,10 +1,12 @@
 let socket;
 const main = (function() {
-  const notifs = [];
-  const items = [];
+  let items = [];
+  const checkmark = "&#x2714;";
+  const xmark = "&#x274c;"
   socket = new WebSocket(`ws://${window.location.host}/ws`);
   socket.onopen = () => {
-    console.log("connected");
+    const statusEl = document.getElementById("status");
+    statusEl.innerHTML = `connected: <label style="color:green;">${checkmark}</label>`;
   };
   socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
@@ -14,21 +16,27 @@ const main = (function() {
         JSON.parse(data.payload),
         data.metadata,
       );
-      notifs.push(tmp);
-      console.warn(tmp);
       items.push(new render_item(
           tmp,
-          (ctx) => display_details(ctx),
+          null
       ));
       render.add_items(items);
       render.render();
     }
   };
-  socket.onerror = (err) => { console.error(err); };
-  socket.onclose = () => { alert("connection closed"); };
+  socket.onerror = (err) => {
+    console.error(err);
+    const statusEl = document.getElementById("status");
+    statusEl.innerHTML = `error with socket: <label style="color:red;">${xmark}</label>`;
+  };
+  socket.onclose = () => {
+    const statusEl = document.getElementById("status");
+    statusEl.innerHTML = `not connected: <label style="color:red;">${xmark}</label>`;
+  };
   function clear_data() {
-    notifs = [];
     items = [];
+    render.add_items(items);
+    render.render();
   }
   return {
     clear_data,
