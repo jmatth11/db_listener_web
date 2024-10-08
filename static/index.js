@@ -1,22 +1,7 @@
 let socket;
-(function() {
+const main = (function() {
   const notifs = [];
   const items = [];
-  const details = document.getElementById("details");
-  function display_details(ctx) {
-    const parent_div = document.createElement("div");
-    for (const [key, value] of Object.entries(ctx.payload)) {
-      const child_div = document.createElement("div");
-      const label = document.createElement("label");
-      const label_value = document.createElement("label");
-      label.innerText = `${key}: `;
-      label_value.innerText = `${value}`;
-      child_div.appendChild(label);
-      child_div.appendChild(label_value);
-      parent_div.appendChild(child_div);
-    }
-    details.replaceChildren(parent_div);
-  }
   socket = new WebSocket(`ws://${window.location.host}/ws`);
   socket.onopen = () => {
     console.log("connected");
@@ -41,4 +26,11 @@ let socket;
   };
   socket.onerror = (err) => { console.error(err); };
   socket.onclose = () => { alert("connection closed"); };
+  function clear_data() {
+    notifs = [];
+    items = [];
+  }
+  return {
+    clear_data,
+  };
 })()
