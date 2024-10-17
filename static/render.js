@@ -157,8 +157,14 @@ const render = (function(){
     }
   }
 
+  function reset_state() {
+    state.set_parent();
+    render();
+  }
+
   return {
     add_items,
     render,
+    reset_state,
   };
 })();

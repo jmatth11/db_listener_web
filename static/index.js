@@ -36,7 +36,7 @@ const main = (function() {
   function clear_data() {
     items = [];
     render.add_items(items);
-    render.render();
+    render.reset_state();
   }
   return {
     clear_data,
