@@ -1,7 +1,9 @@
+import { world } from "./world.js";
+
 /**
  * The render state module.
  */
-const render_state = (function(){
+export const render_state = (function(){
   /**
    * Error types for state flow.
    */
@@ -27,6 +29,9 @@ const render_state = (function(){
    * Internal render state.
    */
   const internal_state = {
+    // TODO add items array here to keep track internally
+    /* The canvas world coordinates and it's transformations */
+    world_coords: new world(),
     /* The state */
     state_t: type.PARENT,
     /**

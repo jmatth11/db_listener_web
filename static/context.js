@@ -1,7 +1,7 @@
 /**
  * Context class to manage a notification from the database.
  */
-class context {
+export class context {
   #PRIMARY_KEY = "PRIMARY_KEY";
   #FOREIGN_KEY = "FOREIGN_KEY";
   /**
@@ -95,7 +95,7 @@ class context {
 /**
  * Render item class to hold a Context object and a callback for events.
  */
-class render_item {
+export class render_item {
   /**
    * Construct a render item.
    *

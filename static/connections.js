@@ -1,4 +1,7 @@
-class connections {
+import { box_item } from "./box_item.js";
+import { text } from "./text.js";
+
+export class connections {
   constructor(canvas_id) {
     this.canvas = document.getElementById(canvas_id);
     this.ctx = this.canvas.getContext("2d");

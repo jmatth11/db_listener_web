@@ -1,7 +1,7 @@
 /**
  * Simple text wrapper object.
  */
-class text {
+export class text {
   constructor(canvas_ctx) {
     this.ctx = canvas_ctx;
   }

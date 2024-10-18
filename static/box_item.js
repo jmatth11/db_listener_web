@@ -1,4 +1,6 @@
-class box_item {
+import { text } from "./text.js";
+
+export class box_item {
   #background_color = "#111";
   #selected_background_color = "#999";
   #value_color = "#0f0";

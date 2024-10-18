@@ -1,4 +1,6 @@
-class details {
+import { text } from "./text.js";
+
+export class details {
   #font = "16px serif";
   #button_text = "connections";
   constructor(canvas_id) {

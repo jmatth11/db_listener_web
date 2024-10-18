@@ -1,4 +1,9 @@
-const render = (function(){
+import { render_state } from "./state.js";
+import { box_item } from "./box_item.js";
+import { connections } from "./connections.js";
+import { details } from "./details.js";
+
+export const render = (function(){
   const canvas = document.getElementById("main");
   const ctx = canvas.getContext("2d");
   const canvasLeft = canvas.offsetLeft + canvas.clientLeft;

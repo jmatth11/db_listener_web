@@ -1,5 +1,8 @@
+import { render } from "./render.js";
+import { context, render_item } from "./context.js";
+
 let socket;
-const main = (function() {
+export const main = (function() {
   let items = [];
   const checkmark = "&#x2714;";
   const xmark = "&#x274c;"
