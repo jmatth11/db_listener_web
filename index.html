@@ -4,11 +4,14 @@
     <title>DB Listener</title>
   </head>
   <body>
-    <div style="margin-bottom:10px;">
-      <button onclick="main.clear_data()">Reset Data</button>
-      <label id="status" style="margin-left:10px;"></label>
+    <div>
+      <div style="margin-bottom:10px;">
+        <button id="reset-button">Reset Data</button>
+        <label id="status" style="margin-left:10px;"></label>
+        <button style="margin-left:10px;" id="back-button">Back</button>
+      </div>
+      <canvas style="border:black;border-style:solid;" id="main" width="1000" height="600"></canvas>
     </div>
-    <canvas style="border:black;border-style:solid;" id="main" width="1000" height="600"></canvas>
 
     <script type="module" src="static/index.js"></script>
   </body>

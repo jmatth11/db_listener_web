@@ -135,6 +135,14 @@ export const render_state = (function(){
     }
     return internal_state.path[0];
   }
+  /**
+   * Get the world info.
+   *
+   * @return {world} The world object.
+   */
+  function get_world() {
+    return internal_state.world_coords;
+  }
   return {
     type,
     error_types,
@@ -146,5 +154,6 @@ export const render_state = (function(){
     get_type,
     get_cur_key,
     get_category_key,
+    get_world,
   }
 })();

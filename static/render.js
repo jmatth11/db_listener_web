@@ -2,14 +2,16 @@ import { render_state } from "./state.js";
 import { box_item } from "./box_item.js";
 import { connections } from "./connections.js";
 import { details } from "./details.js";
+import { world, coordinates } from "./world.js";
 
 export const render = (function(){
-  const canvas = document.getElementById("main");
+  const canvas_id = "main";
+  const canvas = document.getElementById(canvas_id);
   const ctx = canvas.getContext("2d");
   const canvasLeft = canvas.offsetLeft + canvas.clientLeft;
   const canvasTop = canvas.offsetTop + canvas.clientTop;
-  const detail_info = new details("main");
-  const cons = new connections("main");
+  const detail_info = new details(canvas_id);
+  const cons = new connections(canvas_id);
   const size = 40;
   const boxes = new box_item(ctx, size, size);
   const padding = 40;
@@ -19,13 +21,11 @@ export const render = (function(){
   canvas.addEventListener("click", function(event) {
     const x = event.pageX - canvasLeft;
     const y = event.pageY - canvasTop;
-    let clicked_item = false;
     switch (state.get_type()) {
       case state.type.PARENT: {
         for (const [key,item] of current_items.entries()) {
           if (y > item.rect.y && y < (item.rect.y + item.rect.height) &&
               x > item.rect.x && x < (item.rect.x + item.rect.width)) {
-            clicked_item = true;
             state.set_category(key);
             render();
           }
@@ -41,7 +41,6 @@ export const render = (function(){
               item.callback(item.ctx);
             }
             state.set_individual(item.ctx);
-            clicked_item = true;
             render();
           }
         }
@@ -53,25 +52,31 @@ export const render = (function(){
             x > detail_info.button_rect.x &&
           x < (detail_info.button_rect.x + detail_info.button_rect.width)) {
           state.set_connections();
-          clicked_item = true;
           render();
         }
         break;
       }
     }
-    if (!clicked_item) {
-      state.set_back();
-      render();
-    }
   }, false);
 
   function gen_rect(x, y) {
+    let new_coords = new coordinates();
+    new_coords.x = x;
+    new_coords.y = y;
+    new_coords = state.get_world().transformed_pos(new_coords);
     return {
-      x,
-      y,
+      x: new_coords.x,
+      y: new_coords.y,
       width: size,
       height: size,
     };
+  }
+
+  function should_render(item_rect) {
+    const rect_w = item_rect.x + item_rect.width;
+    const rect_h = item_rect.y + item_rect.height;
+    const within_sides = rect_w > canvasLeft && item_rect.x < (canvasLeft + canvas.width);
+    return within_sides && rect_h > canvasTop && item_rect.y < (canvasTop + canvas.height);
   }
 
   // maybe have all items stacked by namespace and when clicked on
@@ -112,6 +117,7 @@ export const render = (function(){
         point.y += (rect.height + padding);
         point.x = 5;
       }
+      if (!should_render(item.rect)) continue;
       // grab the primary key's value
       let selected = false;
       if (state.get_type() == state.type.INDIVIDUAL) {
@@ -129,6 +135,7 @@ export const render = (function(){
     for (const [title, item] of current_items.entries()) {
       const rect = gen_rect(point.x, point.y);
       item.rect = rect;
+      if (!should_render(item.rect)) continue;
       const gen_dim = boxes.gen_box(`${item.items.length}`, item.rect, false, title);
       if (gen_dim.height > size) max_height = gen_dim.height;
       point.x += (gen_dim.width + padding);
@@ -167,9 +174,15 @@ export const render = (function(){
     render();
   }
 
+  function previous_state() {
+    state.set_back();
+    render();
+  }
+
   return {
     add_items,
     render,
     reset_state,
+    previous_state,
   };
 })();

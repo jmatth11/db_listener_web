@@ -2,7 +2,7 @@ import { render } from "./render.js";
 import { context, render_item } from "./context.js";
 
 let socket;
-export const main = (function() {
+(function() {
   let items = [];
   const checkmark = "&#x2714;";
   const xmark = "&#x274c;"
@@ -36,12 +36,15 @@ export const main = (function() {
     const statusEl = document.getElementById("status");
     statusEl.innerHTML = `not connected: <label style="color:red;">${xmark}</label>`;
   };
+
   function clear_data() {
     items = [];
     render.add_items(items);
     render.reset_state();
   }
-  return {
-    clear_data,
-  };
-})()
+  function previous_state() {
+    render.previous_state();
+  }
+  document.getElementById("reset-button").onclick = clear_data;
+  document.getElementById("back-button").onclick = previous_state;
+})();
