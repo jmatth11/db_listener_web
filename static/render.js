@@ -3,6 +3,7 @@ import { box_item } from "./box_item.js";
 import { connections } from "./connections.js";
 import { details } from "./details.js";
 import { world, coordinates } from "./world.js";
+import { WorldEvents } from "./event.js";
 
 export const render = (function(){
   const canvas_id = "main";
@@ -17,6 +18,7 @@ export const render = (function(){
   const padding = 40;
   const state = render_state;
   let current_items = new Map();
+  const event_handler = new WorldEvents(canvas_id, state.get_world());
 
   canvas.addEventListener("click", function(event) {
     const x = event.pageX - canvasLeft;
@@ -27,7 +29,6 @@ export const render = (function(){
           if (y > item.rect.y && y < (item.rect.y + item.rect.height) &&
               x > item.rect.x && x < (item.rect.x + item.rect.width)) {
             state.set_category(key);
-            render();
           }
         }
         break;
@@ -41,7 +42,6 @@ export const render = (function(){
               item.callback(item.ctx);
             }
             state.set_individual(item.ctx);
-            render();
           }
         }
         break;
@@ -52,7 +52,6 @@ export const render = (function(){
             x > detail_info.button_rect.x &&
           x < (detail_info.button_rect.x + detail_info.button_rect.width)) {
           state.set_connections();
-          render();
         }
         break;
       }
@@ -135,11 +134,13 @@ export const render = (function(){
     for (const [title, item] of current_items.entries()) {
       const rect = gen_rect(point.x, point.y);
       item.rect = rect;
-      if (!should_render(item.rect)) continue;
-      const gen_dim = boxes.gen_box(`${item.items.length}`, item.rect, false, title);
-      if (gen_dim.height > size) max_height = gen_dim.height;
-      point.x += (gen_dim.width + padding);
-      if ((point.x + gen_dim.width) > canvas.width) {
+      let modified_rect = structuredClone(rect);
+      if (should_render(item.rect)) {
+        modified_rect = boxes.gen_box(`${item.items.length}`, item.rect, false, title);
+      }
+      if (modified_rect.height > size) max_height = modified_rect.height;
+      point.x += (modified_rect.width + padding);
+      if ((point.x + modified_rect.width) > canvas.width) {
         point.y += (max_height + padding);
         point.x = 5;
       }
@@ -167,16 +168,16 @@ export const render = (function(){
         break;
       }
     }
+    // request animation frame to render a good FPS
+    window.requestAnimationFrame(render);
   }
 
   function reset_state() {
     state.set_parent();
-    render();
   }
 
   function previous_state() {
     state.set_back();
-    render();
   }
 
   return {
