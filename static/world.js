@@ -33,4 +33,7 @@ export class world {
     result.y = coord.y + this.transform.y;
     return result;
   }
+  reset_to_origin() {
+    this.transform = this.origin;
+  }
 }

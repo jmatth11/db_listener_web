@@ -42,9 +42,7 @@ let socket;
     render.add_items(items);
     render.reset_state();
   }
-  function previous_state() {
-    render.previous_state();
-  }
   document.getElementById("reset-button").onclick = clear_data;
-  document.getElementById("back-button").onclick = previous_state;
+  document.getElementById("back-button").onclick = render.previous_state;
+  document.getElementById("reset-graph").onclick = render.reset_world_pos;
 })();

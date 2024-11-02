@@ -74,8 +74,8 @@ export const render = (function(){
   function should_render(item_rect) {
     const rect_w = item_rect.x + item_rect.width;
     const rect_h = item_rect.y + item_rect.height;
-    const within_sides = rect_w > canvasLeft && item_rect.x < (canvasLeft + canvas.width);
-    return within_sides && rect_h > canvasTop && item_rect.y < (canvasTop + canvas.height);
+    const within_sides = rect_w > 0 && item_rect.x < canvas.width;
+    return within_sides && rect_h > 0 && item_rect.y < canvas.height;
   }
 
   // maybe have all items stacked by namespace and when clicked on
@@ -180,10 +180,16 @@ export const render = (function(){
     state.set_back();
   }
 
+  function reset_world_pos() {
+    const cur_world = state.get_world();
+    cur_world.reset_to_origin();
+  }
+
   return {
     add_items,
     render,
     reset_state,
     previous_state,
+    reset_world_pos,
   };
 })();
